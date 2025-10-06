@@ -19,7 +19,11 @@ export const loginWithJWT = (user) => async (dispatch) => {
       history.push("/");
     }
   } catch (error) {
-    toast.error(error.response?.data?.message || error.message);
+    let string_error = ""
+    Object.keys(error.response?.data).forEach(element => {
+        string_error += `${element}: ${String(error.response.data[element])}`
+    });
+    toast.error(string_error);
     dispatch({ type: actionTypes.AUTH_LOADING, loading: false });
   }
 };

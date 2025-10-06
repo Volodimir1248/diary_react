@@ -6,20 +6,7 @@ export const createTaskBoard = (data) => async dispatch => {
     try {
         dispatch({ type: ActionTypes.CREATE_TASK_BOARD_REQUEST });
         const response = await http.post('/tasks/boards', data);
-        const { funnels: {...rawBoard} } = response.data.task_board || {};
-
-        const requestedTitle = typeof data?.title === 'string' ? data.title : undefined;
-        const responseTitle = typeof rawBoard.title === 'string' ? rawBoard.title : undefined;
-        const responseName = typeof rawBoard.name === 'string' ? rawBoard.name : undefined;
-
-        const normalizedTitle = [responseTitle, responseName, requestedTitle].find(
-            value => typeof value === 'string' && value.trim().length > 0
-        );
-
-        const board = {
-            ...rawBoard,
-            title: normalizedTitle ?? '',
-        };
+        const { ...board } = response.data.task_board || {};
 
         dispatch({ type: ActionTypes.CREATE_TASK_BOARD_SUCCESS, payload: board });
         toast.success(response.data.message || 'Доска создана');
